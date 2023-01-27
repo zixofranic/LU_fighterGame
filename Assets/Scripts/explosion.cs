@@ -5,6 +5,7 @@ using UnityEngine;
 public class explosion : MonoBehaviour
 {
     [SerializeField] AnimationClip animationClip;
+
     void Start()
     {
         Destroy(gameObject, animationClip.length);

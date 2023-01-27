@@ -14,16 +14,29 @@ public class Player : MonoBehaviour
     [SerializeField] int _playerLife = 3;
     [SerializeField] GameObject shieldVisualier;
     [SerializeField] GameObject _thrustels;
+    [SerializeField] int _playerScore = 0;
+    [SerializeField] GameObject _leftHurt , _rightHurt;
+    [SerializeField] AudioSource audioSaurce;
+    [SerializeField] AudioClip audioclip;
+
     float canFire = 0;
     SpawnManager _spawnManager;
     bool isTripleShot = false;
     bool isShieldActive = false;
-    [SerializeField] int _playerScore = 0;
     UImanager _uiManager;
     bool _isMoving;
 
     void Start()
     {
+        audioSaurce = GetComponent<AudioSource>();
+        if(audioSaurce == null)
+        {
+            Debug.Log("th player audio saurce is null");
+        }
+        else
+        {
+            audioSaurce.clip = audioclip;
+        }
         _uiManager = GameObject.Find("Canvas").GetComponent<UImanager>();
         _spawnManager = GameObject.Find("Spawner").GetComponent<SpawnManager>();
         if(_spawnManager == null)
@@ -85,6 +98,7 @@ public class Player : MonoBehaviour
         {
             Instantiate(bulletObject, gun.position, Quaternion.identity);
         }
+        audioSaurce.Play();
         
     }
     public void PlayerDamage()
@@ -97,7 +111,14 @@ public class Player : MonoBehaviour
         }
         else {
          _playerLife--;
-            _uiManager.UpdateLives(_playerLife);
+         if(_playerLife ==2){
+            _leftHurt.SetActive(true);
+         }else if (_playerLife==1){
+           _rightHurt.SetActive(true);
+
+         }
+         
+        _uiManager.UpdateLives(_playerLife);
         if(_playerLife < 1)
         {
             _spawnManager.onPlayDeath();
